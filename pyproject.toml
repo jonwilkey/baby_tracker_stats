@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "baby_tracker_stats"
+version = "0.1.0"
+description = "Dashboard for stats from Baby Tracker app."
+authors = ["Jon Wilkey <jon.wilkey@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9,<3.9.7"
+streamlit = "^1.12.2"
+plotly = "^5.10.0"
+
+[tool.poetry.dev-dependencies]
+black = "^22.8.0"
+flake8 = "^5.0.4"
+isort = "^5.10.1"
+ipython = "^8.5.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
