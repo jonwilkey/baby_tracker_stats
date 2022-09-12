@@ -23,7 +23,7 @@ if uploaded_file is not None:
         x="dt_hours",
         marginal="box",
         title=(
-            f"Hours between start of daytime naps in last {last_n_weeks} weeks"
+            f"Duration of wake-times (in hours) over the last {last_n_weeks} weeks"
             f"<br><sup>{summary}</sup>"
         )
     )

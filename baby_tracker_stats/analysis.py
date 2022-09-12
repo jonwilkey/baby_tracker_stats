@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-MAX_DAYTIME_DT_HOURS = 6
+MAX_DAYTIME_DT_HOURS = 8
 
 
 def analyze_daytime_sleep(

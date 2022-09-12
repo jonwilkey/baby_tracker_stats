@@ -5,7 +5,7 @@ from zipfile import ZipFile
 
 import pandas as pd
 
-DESIRED_COLUMNS = {"Time", "dt_hours", "daytime", "Duration", "feed_type"}
+DESIRED_COLUMNS = {"Time", "dt_hours", "daytime", "Duration", "feed_type", "sleep_end"}
 
 
 @dataclass
@@ -28,7 +28,6 @@ def extract_zip_data(file: BytesIO) -> BabyStats:
     )
     stats.all_feeding = pd.concat([stats.nursing, stats.pumped], ignore_index=True)
     stats.all_feeding = stats.all_feeding.sort_values(by="Time").reset_index(drop=True)
-    stats.all_feeding["dt_hours"] = _calculate_timedelta(stats.all_feeding["Time"])
     return stats
 
 
@@ -62,15 +61,16 @@ def _convert_duration_string(duration_str: str) -> float:
             hours += float(parts[n]) / 60
         else:
             raise ValueError(f"{parts[n]} does not match 'hr' or 'min'.")
-    return hours
+    return pd.Timedelta(hours=hours)
 
 
 def _clean_sleep_df(sleep_df: pd.DataFrame) -> pd.DataFrame:
     df = sleep_df.loc[~pd.isnull(sleep_df["Duration"])].copy()
     df["Duration"] = df["Duration"].apply(_convert_duration_string)
-    df["dt_hours"] = _calculate_timedelta(df["Time"])
+    df["sleep_end"] = df["Time"] + df["Duration"]
+    df["dt_hours"] = _calculate_timedelta(df["Time"] - df["sleep_end"].shift(periods=1))
     return df
 
 
 def _calculate_timedelta(ts: pd.Series) -> pd.Series:
-    return ts.diff().apply(lambda x: x.total_seconds() / 3600)
+    return ts.apply(lambda x: x.total_seconds() / 3600)
